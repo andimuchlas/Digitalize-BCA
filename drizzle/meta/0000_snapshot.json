@@ -1,0 +1,190 @@
+{
+  "id": "a9482f1f-6de7-490a-9dbc-1ca981ce5a29",
+  "prevId": "00000000-0000-0000-0000-000000000000",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "public.submissions": {
+      "name": "submissions",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "nama": {
+          "name": "nama",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "nik": {
+          "name": "nik",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "tanggal_lahir": {
+          "name": "tanggal_lahir",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "telepon": {
+          "name": "telepon",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "status_perkawinan": {
+          "name": "status_perkawinan",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "nama_pasangan": {
+          "name": "nama_pasangan",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "dealer": {
+          "name": "dealer",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "merk_kendaraan": {
+          "name": "merk_kendaraan",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "model_kendaraan": {
+          "name": "model_kendaraan",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "tipe_kendaraan": {
+          "name": "tipe_kendaraan",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "warna_kendaraan": {
+          "name": "warna_kendaraan",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "harga_kendaraan": {
+          "name": "harga_kendaraan",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "asuransi": {
+          "name": "asuransi",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "down_payment": {
+          "name": "down_payment",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "tenor": {
+          "name": "tenor",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "angsuran": {
+          "name": "angsuran",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "status": {
+          "name": "status",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 1
+        },
+        "spk_url": {
+          "name": "spk_url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "bukti_bayar_url": {
+          "name": "bukti_bayar_url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "ktp_url": {
+          "name": "ktp_url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "kk_url": {
+          "name": "kk_url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "ttd_konsumen": {
+          "name": "ttd_konsumen",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "ttd_marketing": {
+          "name": "ttd_marketing",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "ttd_dealer": {
+          "name": "ttd_dealer",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    }
+  },
+  "enums": {},
+  "schemas": {},
+  "sequences": {},
+  "roles": {},
+  "policies": {},
+  "views": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}
