@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { Loader2, PenTool, CheckCircle2 } from "lucide-react";
 import { type Submission } from "@/db/schema";
+import { useToast } from "@/context/ToastContext";
 import SignaturePad from "../SignaturePad";
 
 interface EsignPortalProps {
@@ -10,6 +11,7 @@ interface EsignPortalProps {
 }
 
 export default function EsignPortal({ onSuccess }: EsignPortalProps) {
+  const { toast } = useToast();
   const [submissions, setSubmissions] = useState<Submission[]>([]);
   const [selectedSub, setSelectedSub] = useState<Submission | null>(null);
   const [loading, setLoading] = useState(true);
@@ -50,7 +52,11 @@ export default function EsignPortal({ onSuccess }: EsignPortalProps) {
   const handleSaveSignatures = async () => {
     if (!selectedSub) return;
     if (!ttdKonsumen || !ttdMarketing || !ttdDealer) {
-      alert("Harap lengkapi ketiga tanda tangan (Konsumen, Marketing, & Dealer)");
+      toast({
+        title: "Peringatan",
+        description: "Harap lengkapi ketiga tanda tangan (Konsumen, Marketing, & Dealer)",
+        variant: "destructive",
+      });
       return;
     }
 
@@ -69,16 +75,28 @@ export default function EsignPortal({ onSuccess }: EsignPortalProps) {
       });
 
       if (res.ok) {
-        alert("Dokumen berhasil ditandatangani secara digital! Status pengajuan kini lengkap.");
+        toast({
+          title: "Sukses TTD",
+          description: "Dokumen berhasil ditandatangani secara digital! Status pengajuan kini lengkap.",
+          variant: "success",
+        });
         setSelectedSub(null);
         fetchPendingSignatures();
         onSuccess();
       } else {
-        alert("Gagal menyimpan tanda tangan");
+        toast({
+          title: "Gagal Menyimpan",
+          description: "Gagal menyimpan tanda tangan digital",
+          variant: "destructive",
+        });
       }
     } catch (error) {
       console.error(error);
-      alert("Terjadi kesalahan jaringan");
+      toast({
+        title: "Error Jaringan",
+        description: "Terjadi kesalahan jaringan saat menyimpan tanda tangan",
+        variant: "destructive",
+      });
     } finally {
       setLoadingSubmit(false);
     }

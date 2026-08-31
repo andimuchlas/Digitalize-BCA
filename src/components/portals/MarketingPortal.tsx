@@ -3,12 +3,14 @@
 import { useState, useEffect } from "react";
 import { Search, Loader2, Scan, CheckCircle2, ChevronRight } from "lucide-react";
 import { type Submission } from "@/db/schema";
+import { useToast } from "@/context/ToastContext";
 
 interface MarketingPortalProps {
   onSuccess: () => void;
 }
 
 export default function MarketingPortal({ onSuccess }: MarketingPortalProps) {
+  const { toast } = useToast();
   const [submissions, setSubmissions] = useState<Submission[]>([]);
   const [selectedSub, setSelectedSub] = useState<Submission | null>(null);
   const [loadingList, setLoadingList] = useState(true);
@@ -92,7 +94,11 @@ export default function MarketingPortal({ onSuccess }: MarketingPortalProps) {
       }
     } catch (e) {
       console.error(e);
-      alert("Simulasi OCR gagal");
+      toast({
+        title: "Gagal OCR",
+        description: "Simulasi pemindaian OCR KTP gagal",
+        variant: "destructive",
+      });
     } finally {
       setLoadingOcr(false);
     }
@@ -130,17 +136,29 @@ export default function MarketingPortal({ onSuccess }: MarketingPortalProps) {
       });
 
       if (res.ok) {
-        alert("Data digital berhasil dilengkapi! Status pengajuan kini menunggu persetujuan (Status 4)");
+        toast({
+          title: "Sukses",
+          description: "Data digital berhasil dilengkapi! Status pengajuan kini menunggu persetujuan (Status 4)",
+          variant: "success",
+        });
         setSelectedSub(null);
         fetchProspeks();
         onSuccess();
       } else {
         const err = await res.json();
-        alert(`Error: ${err.error}`);
+        toast({
+          title: "Gagal Menyimpan",
+          description: err.error || "Gagal memperbarui data pengajuan",
+          variant: "destructive",
+        });
       }
     } catch (error) {
       console.error(error);
-      alert("Gagal memperbarui data pengajuan");
+      toast({
+        title: "Error Jaringan",
+        description: "Gagal menghubungi server untuk memperbarui data",
+        variant: "destructive",
+      });
     } finally {
       setLoadingSubmit(false);
     }

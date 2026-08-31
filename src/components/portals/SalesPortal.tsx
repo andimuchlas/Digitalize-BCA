@@ -2,12 +2,14 @@
 
 import { useState } from "react";
 import { Upload, CheckCircle2 } from "lucide-react";
+import { useToast } from "@/context/ToastContext";
 
 interface SalesPortalProps {
   onSuccess: () => void;
 }
 
 export default function SalesPortal({ onSuccess }: SalesPortalProps) {
+  const { toast } = useToast();
   const [nama, setNama] = useState("");
   const [telepon, setTelepon] = useState("");
   const [dealer, setDealer] = useState("");
@@ -19,7 +21,11 @@ export default function SalesPortal({ onSuccess }: SalesPortalProps) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!nama || !telepon || !dealer) {
-      alert("Harap lengkapi semua data wajib");
+      toast({
+        title: "Peringatan",
+        description: "Harap lengkapi semua data wajib",
+        variant: "destructive",
+      });
       return;
     }
 
@@ -41,7 +47,11 @@ export default function SalesPortal({ onSuccess }: SalesPortalProps) {
       });
 
       if (res.ok) {
-        setMessage("Prospek berhasil dikirim ke Marketing!");
+        toast({
+          title: "Sukses",
+          description: "Prospek berhasil dikirim ke Marketing!",
+          variant: "success",
+        });
         setNama("");
         setTelepon("");
         setDealer("");
@@ -50,11 +60,19 @@ export default function SalesPortal({ onSuccess }: SalesPortalProps) {
         onSuccess();
       } else {
         const err = await res.json();
-        alert(`Error: ${err.error}`);
+        toast({
+          title: "Gagal Mengirim",
+          description: err.error || "Gagal mengirim data",
+          variant: "destructive",
+        });
       }
     } catch (error) {
       console.error(error);
-      alert("Gagal mengirim data");
+      toast({
+        title: "Error Jaringan",
+        description: "Gagal mengirim data ke server",
+        variant: "destructive",
+      });
     } finally {
       setLoading(false);
     }

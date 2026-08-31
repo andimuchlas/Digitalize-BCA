@@ -3,12 +3,14 @@
 import { useState, useEffect } from "react";
 import { Loader2, FileText, Printer, Coins, CheckCircle2 } from "lucide-react";
 import { type Submission } from "@/db/schema";
+import { useToast } from "@/context/ToastContext";
 
 interface BackofficePortalProps {
   onSuccess: () => void;
 }
 
 export default function BackofficePortal({ onSuccess }: BackofficePortalProps) {
+  const { toast } = useToast();
   const [submissions, setSubmissions] = useState<Submission[]>([]);
   const [selectedSub, setSelectedSub] = useState<Submission | null>(null);
   const [loading, setLoading] = useState(true);
@@ -46,16 +48,28 @@ export default function BackofficePortal({ onSuccess }: BackofficePortalProps) {
       });
 
       if (res.ok) {
-        alert("Dana berhasil dicairkan ke dealer! Proses digitalisasi kredit selesai.");
+        toast({
+          title: "Pencairan Berhasil",
+          description: "Dana berhasil dicairkan ke dealer! Proses digitalisasi kredit selesai.",
+          variant: "success",
+        });
         fetchBackofficeQueue();
         setSelectedSub(null);
         onSuccess();
       } else {
-        alert("Gagal melakukan pencairan dana");
+        toast({
+          title: "Gagal Mencairkan",
+          description: "Gagal melakukan pencairan dana ke dealer",
+          variant: "destructive",
+        });
       }
     } catch (error) {
       console.error(error);
-      alert("Terjadi kesalahan jaringan");
+      toast({
+        title: "Error Jaringan",
+        description: "Terjadi kesalahan jaringan saat memproses pencairan",
+        variant: "destructive",
+      });
     } finally {
       setLoadingAction(false);
     }

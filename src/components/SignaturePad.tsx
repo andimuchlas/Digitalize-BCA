@@ -10,20 +10,53 @@ interface SignaturePadProps {
 
 export default function SignaturePad({ onSave, onClear, label }: SignaturePadProps) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const containerRef = useRef<HTMLDivElement | null>(null);
   const [isDrawing, setIsDrawing] = useState(false);
   const [hasDrawed, setHasDrawed] = useState(false);
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    if (canvas) {
-      const ctx = canvas.getContext("2d");
-      if (ctx) {
-        ctx.strokeStyle = "#0f172a"; // Slate 900
-        ctx.lineWidth = 3;
-        ctx.lineCap = "round";
+    if (!canvas) return;
+
+    const resizeCanvas = () => {
+      const parent = canvas.parentElement;
+      if (parent) {
+        // Save current drawing to temp canvas to preserve on resize
+        const tempCanvas = document.createElement("canvas");
+        tempCanvas.width = canvas.width;
+        tempCanvas.height = canvas.height;
+        const tempCtx = tempCanvas.getContext("2d");
+        let hasImage = false;
+        
+        if (tempCtx && hasDrawed) {
+          tempCtx.drawImage(canvas, 0, 0);
+          hasImage = true;
+        }
+
+        // Set canvas resolution to match container width
+        canvas.width = parent.clientWidth - 32; // subtracting padding
+        canvas.height = 150;
+
+        const ctx = canvas.getContext("2d");
+        if (ctx) {
+          ctx.strokeStyle = "#0f172a"; // Slate 900
+          ctx.lineWidth = 2.5;
+          ctx.lineCap = "round";
+          ctx.lineJoin = "round";
+          
+          if (hasImage) {
+            ctx.drawImage(tempCanvas, 0, 0);
+          }
+        }
       }
-    }
-  }, []);
+    };
+
+    // Run on mount
+    resizeCanvas();
+
+    window.addEventListener("resize", resizeCanvas);
+    return () => window.removeEventListener("resize", resizeCanvas);
+  }, [hasDrawed]);
 
   const getCoordinates = (e: React.MouseEvent | React.TouchEvent) => {
     const canvas = canvasRef.current;
@@ -99,12 +132,10 @@ export default function SignaturePad({ onSave, onClear, label }: SignaturePadPro
   };
 
   return (
-    <div className="border border-slate-200 rounded-lg p-4 bg-white shadow-sm flex flex-col items-center">
-      <span className="text-sm font-semibold text-slate-700 mb-2">{label}</span>
+    <div ref={containerRef} className="border border-slate-200 rounded-lg p-4 bg-white shadow-sm flex flex-col items-center w-full min-w-0">
+      <span className="text-sm font-semibold text-slate-700 mb-2 truncate w-full text-center">{label}</span>
       <canvas
         ref={canvasRef}
-        width={350}
-        height={150}
         onMouseDown={startDrawing}
         onMouseMove={draw}
         onMouseUp={stopDrawing}
@@ -112,7 +143,7 @@ export default function SignaturePad({ onSave, onClear, label }: SignaturePadPro
         onTouchStart={startDrawing}
         onTouchMove={draw}
         onTouchEnd={stopDrawing}
-        className="border border-dashed border-slate-300 rounded bg-slate-50 cursor-crosshair touch-none"
+        className="border border-dashed border-slate-300 rounded bg-slate-50 cursor-crosshair touch-none w-full"
       />
       <div className="flex gap-2 mt-3">
         <button

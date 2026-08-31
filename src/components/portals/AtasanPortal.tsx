@@ -3,12 +3,14 @@
 import { useState, useEffect } from "react";
 import { Loader2, ShieldCheck, ThumbsUp, ThumbsDown } from "lucide-react";
 import { type Submission } from "@/db/schema";
+import { useToast } from "@/context/ToastContext";
 
 interface AtasanPortalProps {
   onSuccess: () => void;
 }
 
 export default function AtasanPortal({ onSuccess }: AtasanPortalProps) {
+  const { toast } = useToast();
   const [submissions, setSubmissions] = useState<Submission[]>([]);
   const [loading, setLoading] = useState(true);
   const [actionId, setActionId] = useState<number | null>(null);
@@ -45,15 +47,27 @@ export default function AtasanPortal({ onSuccess }: AtasanPortalProps) {
       });
 
       if (res.ok) {
-        alert("Pengajuan kredit berhasil disetujui! PO & Kontrak siap ditandatangani.");
+        toast({
+          title: "Sukses Approval",
+          description: "Pengajuan kredit berhasil disetujui! PO & Kontrak siap ditandatangani.",
+          variant: "success",
+        });
         fetchPendingApproval();
         onSuccess();
       } else {
-        alert("Gagal menyetujui pengajuan");
+        toast({
+          title: "Gagal Approval",
+          description: "Gagal menyetujui pengajuan kredit",
+          variant: "destructive",
+        });
       }
     } catch (error) {
       console.error(error);
-      alert("Terjadi kesalahan jaringan");
+      toast({
+        title: "Error Jaringan",
+        description: "Terjadi kesalahan jaringan saat menyetujui pengajuan",
+        variant: "destructive",
+      });
     } finally {
       setActionId(null);
     }
